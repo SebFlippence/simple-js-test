@@ -130,7 +130,11 @@ public class SimpleJsTestMojo extends AbstractMojo {
 
     private boolean isValidTestFile(File file) {
         String fileName = file.getName();
-        return fileName.contains("Test");
+        if (fileName.endsWith(".js") && fileName.contains("Test")) {
+            return true;
+        }
+
+        return false;
     }
 
     private static String contentsOfFile(File file) throws IOException {
