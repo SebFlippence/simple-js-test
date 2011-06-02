@@ -92,7 +92,7 @@ public class SimpleJsTestMojo extends AbstractMojo {
                 
                 SimpleJsTestResult result = test.execute();
                 if (result.getState()==SimpleJsTestResult.State.FAIL) {
-                    throw new MojoFailureException(file.getName() + "#" + test.getName() + " failed with " + result.toString());
+                    throw new MojoFailureException(file.getName() + "#" + test.getName() + " failed with " + result.toString() + ": " + result.getMessage());
                 }
 
                 testCount++;
