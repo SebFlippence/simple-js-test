@@ -28,18 +28,17 @@ public class SimpleJsTestMojo extends AbstractMojo {
     private MavenProject project;
 
     public void execute() throws MojoExecutionException, MojoFailureException {
-
         File testBase = new File(project.getBasedir(),
-                                 File.separator + "src" +
-                                 File.separator + "test" +
-                                 File.separator + "javascript" +
-                                 File.separator);
+                File.separator + "src"
+                + File.separator + "test"
+                + File.separator + "javascript"
+                + File.separator);
 
-		this.getLog().info("------------------------------------------------------------------------");
-		this.getLog().info("");
+        this.getLog().info("------------------------------------------------------------------------");
+        this.getLog().info("");
         this.getLog().info("Preparing to execute JavaScript unit tests from: " + testBase.getPath());
 
-		if (!testBase.exists()) {
+        if (!testBase.exists()) {
             this.getLog().warn("JavaScript test directory does not exist");
             return;
         }
@@ -51,13 +50,13 @@ public class SimpleJsTestMojo extends AbstractMojo {
         int globalTestFailCount = 0;
         List globalErrorMsgList = new ArrayList();
         for (File file : testFilesIn(testBase)) {
-			int testCount = 0;
-			int testPassCount = 0;
-			int testFailCount = 0;
+            int testCount = 0;
+            int testPassCount = 0;
+            int testFailCount = 0;
 
-			this.getLog().info("");
-			this.getLog().info("------------------------------------------------------------------------");
-			this.getLog().info("");
+            this.getLog().info("");
+            this.getLog().info("------------------------------------------------------------------------");
+            this.getLog().info("");
 
             this.getLog().info("Loading JavaScript unit test(s) in file: " + file.getName());
             this.getLog().info("");
@@ -67,8 +66,8 @@ public class SimpleJsTestMojo extends AbstractMojo {
                 testFileContent = contentsOfFile(file);
             } catch (IOException ioe) {
                 throw new MojoExecutionException(
-                                    "Test file could not be loaded: " + file +
-                                    ", " + ioe.getMessage());
+                        "Test file could not be loaded: " + file
+                        + ", " + ioe.getMessage());
             }
 
             List<SimpleJsTest> tests;
@@ -92,11 +91,11 @@ public class SimpleJsTestMojo extends AbstractMojo {
 
 
 
-            for (SimpleJsTest test : tests) {            
+            for (SimpleJsTest test : tests) {
                 this.getLog().info("Test: " + test.getName());
-                
+
                 SimpleJsTestResult result = test.execute();
-                if (result.getState()==SimpleJsTestResult.State.FAIL) {                    
+                if (result.getState() == SimpleJsTestResult.State.FAIL) {
                     globalErrorMsgList.add(file.getName() + "#" + test.getName() + " failed with " + result.toString() + ": " + result.getMessage());
                     testFailCount++;
                     globalTestFailCount++;
@@ -108,16 +107,16 @@ public class SimpleJsTestMojo extends AbstractMojo {
                 testCount++;
                 globalTestCount++;
             }
-            
-			this.getLog().info("");
-			this.getLog().info(testCount + " test(s) executed, " + testPassCount + " test(s) passed, " + testFailCount + " test(s) failed");
+
+            this.getLog().info("");
+            this.getLog().info(testCount + " test(s) executed, " + testPassCount + " test(s) passed, " + testFailCount + " test(s) failed");
         }
 
-		this.getLog().info("");
-		this.getLog().info("------------------------------------------------------------------------");
+        this.getLog().info("");
+        this.getLog().info("------------------------------------------------------------------------");
         this.getLog().info("JavaScript unit testing complete: " + globalTestCount + " test(s) executed, " + globalTestPassCount + " test(s) passed, " + globalTestFailCount + " test(s) failed");
-		this.getLog().info("------------------------------------------------------------------------");
-		this.getLog().info("");
+        this.getLog().info("------------------------------------------------------------------------");
+        this.getLog().info("");
 
         if (globalTestFailCount > 0) {
             throw new MojoFailureException(globalTestFailCount + " JavaScript unit test(s) failed with: " + globalErrorMsgList.toString());
@@ -135,8 +134,8 @@ public class SimpleJsTestMojo extends AbstractMojo {
             if (file.isDirectory()) {
                 testFilesIn(file, list);
             } else {
-				if (isValidTestFile(file)) {
-	                list.add(file);
+                if (isValidTestFile(file)) {
+                    list.add(file);
                 }
             }
         }
@@ -156,6 +155,7 @@ public class SimpleJsTestMojo extends AbstractMojo {
     }
 
     private static class M2TestResourceLoader implements TestResourceLoader {
+
         private final MavenProject project;
 
         public M2TestResourceLoader(MavenProject project) {
@@ -164,8 +164,8 @@ public class SimpleJsTestMojo extends AbstractMojo {
 
         public String loadResource(String path) throws FileNotFoundException, IOException {
             File file = new File(project.getBasedir().getPath(),
-                                 File.separator + "src" +
-                                 File.separator + path);
+                    File.separator + "src"
+                    + File.separator + path);
             if (!file.exists()) {
                 throw new FileNotFoundException("Test resource does not exist: " + path);
             }
