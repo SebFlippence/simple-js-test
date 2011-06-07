@@ -5,6 +5,8 @@ import com.google.code.simplejstest.SimpleJsTestDependency;
 import com.google.code.simplejstest.SimpleJsTestLoader;
 import com.google.code.simplejstest.SimpleJsTestResult;
 import com.google.code.simplejstest.TestResourceLoader;
+import com.google.code.simplejstest.m2.SimpleJsTestJUnitWriter;
+import java.io.IOException;
 import com.google.common.io.Files;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,6 +28,8 @@ public class SimpleJsTestMojo extends AbstractMojo {
 
     /** @parameter default-value="${project}" */
     private MavenProject project;
+    private static final String JUNIT_FILE = "TEST-";
+    private static final String JUNIT_DIR = "target" + File.separator + "simple-js-test-junit-reports";
 
     public void execute() throws MojoExecutionException, MojoFailureException {
         File testBase = new File(project.getBasedir(),
@@ -53,6 +57,8 @@ public class SimpleJsTestMojo extends AbstractMojo {
             int testCount = 0;
             int testPassCount = 0;
             int testFailCount = 0;
+
+            SimpleJsTestJUnitWriter JUnitWriter = new SimpleJsTestJUnitWriter(JUNIT_FILE + file.getName() + ".xml", JUNIT_DIR);
 
             this.getLog().info("");
             this.getLog().info("------------------------------------------------------------------------");
@@ -104,8 +110,18 @@ public class SimpleJsTestMojo extends AbstractMojo {
                     globalTestPassCount++;
                 }
 
+                JUnitWriter.newTest(result);
+
                 testCount++;
                 globalTestCount++;
+            }
+
+            try {
+                JUnitWriter.write();
+            } catch (IOException e) {
+                throw new MojoExecutionException(
+                        "Unable to write JUnit Report"
+                        + ", " + e.getMessage());
             }
 
             this.getLog().info("");

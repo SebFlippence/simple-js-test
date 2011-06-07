@@ -11,13 +11,12 @@ import javax.script.ScriptException;
  * @author nick
  */
 public class SimpleJsTest {
-    private static final SimpleJsTestResult PASS_RESULT =
-                        new SimpleJsTestResult(SimpleJsTestResult.State.PASS, null);
-
     private final String name;
     private final String testFileContent;
     private final List<SimpleJsTestDependency> dependencies;
     private final ScriptEngine scriptEngine;
+    private long testStartTime;
+    private float testExeTime;
 
     SimpleJsTest(String name,
                  String testFileContent,
@@ -55,23 +54,25 @@ public class SimpleJsTest {
         Bindings bindings = scriptEngine.createBindings();
 
         Object result = null;
-        try {
+        testStartTime = System.currentTimeMillis();
+        try {            
             result = scriptEngine.eval(script.toString(), bindings);
         } catch (ScriptException se) {
-            return new SimpleJsTestResult(SimpleJsTestResult.State.FAIL,
-                                          "Test script failed: " + se.getMessage());
+            return new SimpleJsTestResult(this.getName(), SimpleJsTestResult.State.FAIL,
+                                          "Test script failed: " + se.getMessage(), new Float(String.format("%.3f", (System.currentTimeMillis() - testStartTime) / 1000.)));
         }
+        testExeTime = new Float(String.format("%.3f", (System.currentTimeMillis() - testStartTime) / 1000.));
 
         if (result==null) {
             throw new SimpleJsTestSystemException("Test returned no result");
         }
 
         if (((result instanceof Boolean) && ((Boolean)result) == true) || "mvn-js-test-[pass]".equals(result.toString())) {
-            return PASS_RESULT;
+            return new SimpleJsTestResult(this.getName(), SimpleJsTestResult.State.PASS, null, testExeTime);
         }
         
-        return new SimpleJsTestResult(SimpleJsTestResult.State.FAIL,
-                                      "Test script failed: " + result);
+        return new SimpleJsTestResult(this.getName(), SimpleJsTestResult.State.FAIL,
+                                      "Test script failed: " + result, testExeTime);
     }
 
     /**

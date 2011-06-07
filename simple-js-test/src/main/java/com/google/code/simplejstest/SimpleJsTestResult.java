@@ -11,12 +11,20 @@ public class SimpleJsTestResult {
         FAIL;
     }
 
+    private final String name;
     private final State state;
     private final String message;
+    private final float time;
 
-    SimpleJsTestResult(State state, String message) {
+    SimpleJsTestResult(String name, State state, String message, float time) {
+        this.name = name;
         this.state = state;
         this.message = message;
+        this.time = time;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public State getState() {
@@ -25,6 +33,10 @@ public class SimpleJsTestResult {
 
     public String getMessage() {        
         return message;
+    }
+
+    public float getTime() {
+        return time;
     }
 
 }
