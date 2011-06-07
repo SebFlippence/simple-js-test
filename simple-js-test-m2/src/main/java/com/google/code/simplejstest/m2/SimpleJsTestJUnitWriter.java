@@ -39,6 +39,7 @@ public class SimpleJsTestJUnitWriter {
     private String mReportDir;
 
     private ArrayList<SimpleJsTestResult> tests = new ArrayList<SimpleJsTestResult>();
+    private ArrayList<String> errors = new ArrayList<String>();
 
     /**
      * Creates a new writer.
@@ -61,6 +62,15 @@ public class SimpleJsTestJUnitWriter {
     }
 
     /**
+     * Fails the current test with a generic error (e.g. JavaScript syntax error)
+     * 
+     * @param error message as a String
+     */
+    public void addError(String error) {
+        this.errors.add(error);
+    }
+
+    /**
      * Internal function for looping through all of the tests added to this object and generating an XML object
      * in a JUnit report format
      * 
@@ -69,6 +79,7 @@ public class SimpleJsTestJUnitWriter {
     private Document convertXml() {
         int testCount = 0;
         int testFailCount = 0;
+        int testErrorCount = 0;
         float testTimeTotal = 0;
 
         for (SimpleJsTestResult test : this.tests) {
@@ -79,12 +90,20 @@ public class SimpleJsTestJUnitWriter {
              testTimeTotal = testTimeTotal + test.getTime();
          }
 
+        for (String error : this.errors) {
+            testErrorCount++;
+        }
+
         Document document = DocumentHelper.createDocument();
         Element root = document.addElement(TAG_SUITE)
                 .addAttribute(ATTRIBUTE_NAME, this.mReportFile)
-                .addAttribute(TAG_ERRORS, "0")
+                .addAttribute(TAG_ERRORS,  Integer.toString(testErrorCount))
                 .addAttribute(TAG_FAILURES, Integer.toString(testFailCount))
                 .addAttribute(ATTRIBUTE_TIME, String.valueOf(testTimeTotal));
+
+        for (String error : this.errors) {
+            root.addText(error);
+        }
 
         for (SimpleJsTestResult test : this.tests) {
             Element testcase = root.addElement(TAG_CASE)

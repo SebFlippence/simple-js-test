@@ -87,7 +87,7 @@ public class SimpleJsTestLoader {
         try {
             result = (String) scriptEngine.eval(script.toString(), bindings);
         } catch (ScriptException se) {
-            throw new SimpleJsTestSystemException("Could not retieve test names from file", se);
+            throw new SimpleJsTestSystemException("Could not retieve test names from file or JavaScript syntax error: "+se.getMessage(), se);
         }
 
         return Arrays.asList(result.split(","));

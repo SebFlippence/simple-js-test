@@ -52,6 +52,7 @@ public class SimpleJsTestMojo extends AbstractMojo {
         int globalTestCount = 0;
         int globalTestPassCount = 0;
         int globalTestFailCount = 0;
+        int globalTestErrorCount = 0;
         List globalErrorMsgList = new ArrayList();
         for (File file : testFilesIn(testBase)) {
             int testCount = 0;
@@ -79,8 +80,23 @@ public class SimpleJsTestMojo extends AbstractMojo {
             List<SimpleJsTest> tests;
             try {
                 tests = new SimpleJsTestLoader(resourceLoader).loadTestsForFile(testFileContent);
-            } catch (IOException ioe) {
-                throw new MojoExecutionException(ioe.getMessage());
+            } catch (Exception e) {
+                String errorMsg = file.getName() + " has errors: " + e.getMessage();
+                globalErrorMsgList.add(errorMsg);
+                globalTestErrorCount++;
+
+                this.getLog().info("");
+                this.getLog().info(errorMsg);
+
+                JUnitWriter.addError(errorMsg);
+                try {
+                    JUnitWriter.write();
+                } catch (IOException ioe) {
+                    throw new MojoExecutionException(
+                            "Unable to write JUnit Report"
+                            + ", " + ioe.getMessage());
+                }
+                break;
             }
 
             this.getLog().info("Processing " + tests.size() + " JavaScript unit test(s) in file: " + file.getName());
@@ -130,12 +146,12 @@ public class SimpleJsTestMojo extends AbstractMojo {
 
         this.getLog().info("");
         this.getLog().info("------------------------------------------------------------------------");
-        this.getLog().info("JavaScript unit testing complete: " + globalTestCount + " test(s) executed, " + globalTestPassCount + " test(s) passed, " + globalTestFailCount + " test(s) failed");
+        this.getLog().info("JavaScript unit testing complete: " + globalTestCount + " test(s) executed, " + globalTestPassCount + " test(s) passed, " + globalTestFailCount + " test(s) failed, " + globalTestErrorCount + " file(s) have error(s)");
         this.getLog().info("------------------------------------------------------------------------");
         this.getLog().info("");
 
-        if (globalTestFailCount > 0) {
-            throw new MojoFailureException(globalTestFailCount + " JavaScript unit test(s) failed with: " + globalErrorMsgList.toString());
+        if (globalTestFailCount > 0 || globalTestErrorCount > 0) {
+            throw new MojoFailureException((globalTestFailCount + globalTestErrorCount) + " JavaScript unit test(s) failed with: " + globalErrorMsgList.toString());
         }
     }
 
