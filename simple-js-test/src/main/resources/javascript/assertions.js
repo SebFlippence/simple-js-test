@@ -1,6 +1,10 @@
 
-function assertFail() {
-    throw "Assertion failed";
+function assertFail(msg) {
+    addMsg = "";
+    if (msg !== undefined) {
+        addMsg = ": " + msg;
+    }
+    throw "Assertion failed" + addMsg;
 }
 
 function assertPass() {
