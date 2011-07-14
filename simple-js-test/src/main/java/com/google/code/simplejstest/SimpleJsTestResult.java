@@ -15,12 +15,14 @@ public class SimpleJsTestResult {
     private final State state;
     private final String message;
     private final float time;
+    private final String code;
 
-    SimpleJsTestResult(String name, State state, String message, float time) {
+    SimpleJsTestResult(String name, State state, String message, float time, String code) {
         this.name = name;
         this.state = state;
         this.message = message;
         this.time = time;
+        this.code = code;
     }
 
     public String getName() {
@@ -37,6 +39,10 @@ public class SimpleJsTestResult {
 
     public float getTime() {
         return time;
+    }
+
+    public String getCode() {
+        return code;
     }
 
 }

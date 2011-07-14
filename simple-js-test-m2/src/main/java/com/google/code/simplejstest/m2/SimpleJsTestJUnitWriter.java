@@ -76,7 +76,7 @@ public class SimpleJsTestJUnitWriter {
      * 
      * @return org.dom4j.Document
      */
-    private Document convertXml() {
+    private Document convertXml() throws IOException {
         int testCount = 0;
         int testFailCount = 0;
         int testErrorCount = 0;
@@ -112,6 +112,7 @@ public class SimpleJsTestJUnitWriter {
                     .addAttribute(ATTRIBUTE_TIME, String.valueOf(test.getTime()));
             if (test.getState().equals(SimpleJsTestResult.State.FAIL)) {
                 testcase.addText(test.getMessage());
+                this.writeContent("ERROR--" + this.mReportFile + "--" + test.getName() + ".js", test.getCode());
             }
         }
          
@@ -119,11 +120,28 @@ public class SimpleJsTestJUnitWriter {
     }
 
     /**
+     * Creates a fileName in the report directory with the given content
+     * 
+     * @param fileName
+     * @param content
+     * @throws IOException 
+     */
+    public void writeContent(String fileName, String content) throws IOException {
+        FileWriter writer = new FileWriter(this.mReportDir + File.separator + fileName);
+        try {
+            writer.write(content);
+        } catch (Exception e) {
+            throw new IOException("Unable to write content to file: "+e.getMessage());
+        }
+        writer.close();
+    }
+
+    /**
      * Converts tests added to this object to XML and writes out the JUnit reports to the reportDir
      * 
      * @throws IOException 
      */
-    public void write() throws IOException {
+    public void writeXmlReport() throws IOException {
         // Create target reportDir if it doesn't already exist
         File reportDir = new File(this.mReportDir);
         if (!reportDir.exists()) {

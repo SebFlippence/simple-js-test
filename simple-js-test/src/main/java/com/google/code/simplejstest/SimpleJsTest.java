@@ -17,6 +17,7 @@ public class SimpleJsTest {
     private final ScriptEngine scriptEngine;
     private long testStartTime;
     private float testExeTime;
+    private String testCode;
 
     SimpleJsTest(String name,
                  String testFileContent,
@@ -50,16 +51,17 @@ public class SimpleJsTest {
 
         String invocation = "tests.runTest('" + this.name + "');";
         script.append(invocation);
+        testCode = script.toString();
 
         Bindings bindings = scriptEngine.createBindings();
 
         Object result = null;
         testStartTime = System.currentTimeMillis();
         try {            
-            result = scriptEngine.eval(script.toString(), bindings);
+            result = scriptEngine.eval(testCode, bindings);
         } catch (ScriptException se) {
             return new SimpleJsTestResult(this.getName(), SimpleJsTestResult.State.FAIL,
-                                          "Test script failed: " + se.getMessage(), new Float(String.format("%.3f", (System.currentTimeMillis() - testStartTime) / 1000.)));
+                                          "Test script failed: " + se.getMessage() + " line: " + se.getLineNumber(), new Float(String.format("%.3f", (System.currentTimeMillis() - testStartTime) / 1000.)), testCode);
         }
         testExeTime = new Float(String.format("%.3f", (System.currentTimeMillis() - testStartTime) / 1000.));
 
@@ -68,11 +70,11 @@ public class SimpleJsTest {
         }
 
         if (((result instanceof Boolean) && ((Boolean)result) == true) || "mvn-js-test-[pass]".equals(result.toString())) {
-            return new SimpleJsTestResult(this.getName(), SimpleJsTestResult.State.PASS, null, testExeTime);
+            return new SimpleJsTestResult(this.getName(), SimpleJsTestResult.State.PASS, null, testExeTime, testCode);
         }
         
         return new SimpleJsTestResult(this.getName(), SimpleJsTestResult.State.FAIL,
-                                      "Test script failed: " + result, testExeTime);
+                                      "Test script failed: " + result, testExeTime, testCode);
     }
 
     /**

@@ -90,7 +90,7 @@ public class SimpleJsTestMojo extends AbstractMojo {
 
                 JUnitWriter.addError(errorMsg);
                 try {
-                    JUnitWriter.write();
+                    JUnitWriter.writeXmlReport();
                 } catch (IOException ioe) {
                     throw new MojoExecutionException(
                             "Unable to write JUnit Report"
@@ -133,7 +133,7 @@ public class SimpleJsTestMojo extends AbstractMojo {
             }
 
             try {
-                JUnitWriter.write();
+                JUnitWriter.writeXmlReport();
             } catch (IOException e) {
                 throw new MojoExecutionException(
                         "Unable to write JUnit Report"
