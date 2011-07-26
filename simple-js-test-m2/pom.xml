@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>com.google.code.simple-js-test</groupId>
 		<artifactId>simple-js-test-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>0.0.1-SNAPSHOT-0.0.1-sebflipper-Branch</version>
 	</parent>
 
 	<groupId>com.google.code.simple-js-test</groupId>
@@ -29,6 +29,11 @@
 			<groupId>org.apache.maven</groupId>
 			<artifactId>maven-project</artifactId>
 			<version>2.2.1</version>
+		</dependency>
+		<dependency>
+			<groupId>dom4j</groupId>
+			<artifactId>dom4j</artifactId>
+			<version>1.6.1</version>
 		</dependency>
 	</dependencies>
 </project>

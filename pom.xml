@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.google.code.simple-js-test</groupId>
 	<artifactId>simple-js-test-parent</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1-SNAPSHOT-0.0.1-sebflipper-Branch</version>
 	<name>simple-js-test-parent</name>
 
 	<packaging>pom</packaging>
