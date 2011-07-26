@@ -24,6 +24,7 @@ This is a fork of [nickbfaulkner's](http://code.google.com/u/@UBRfQFVZBxJBXwJ%2F
 
 JavaScript:
 
+````javascript
     var dependencies = ["/main/webapp/js/target_file.js",
                     "/test/javascript/common_test_utils.js"];
 
@@ -39,6 +40,7 @@ JavaScript:
             assertEquals(1, 1);
         }
     };
+````
 
 #### See also:
 
