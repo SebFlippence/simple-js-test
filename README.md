@@ -47,3 +47,4 @@ JavaScript:
 - [nickbfaulkner on Google Code](http://code.google.com/u/@UBRfQFVZBxJBXwJ%2F/)
 - [The original simple-js-test from Google Code](http://code.google.com/p/simple-js-test/).
 
+Code license: [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0)
